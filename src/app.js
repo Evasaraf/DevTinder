@@ -26,6 +26,12 @@ app.use("/greet" ,(req, res) => {
 app.use((req, res) => {
     res.send("hello from the server");
 });
+// if therse a question mark then it means it can also work without that particular word like ab?c -> /ac, /abc
+// /ab+c => /abbbbbbc, /abbc, 
+// /ab*cd => abcd, /abEVAcd, /abXYZcd
+app.use("/abc", (req, res)=> {
+    res.send("lets explore more");
+});
 
 app.listen(7777, ()=> {
     console.log("server is successfully litening on port 7777")
