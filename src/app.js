@@ -3,8 +3,12 @@ const app = express();
 const {adminauth} = require("./middleware/auth.js");
 
 app.use("/getuserdata", (req,res)=>{
-    throw new Error("abcdef");
+    try{
     res.send("send user data")
+    }
+    catch(err){
+        res.status(500).send("something went wrong")
+    }
 })
 
 app.use("/", (err, req, res, next)=>{
