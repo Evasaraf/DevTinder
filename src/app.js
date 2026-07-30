@@ -8,7 +8,7 @@ const {adminauth} = require("./middleware/auth.js");
 //});
 app.get("/admin", adminauth);
 
-app.get("/admin/getAllData", (req, res)=>{
+app.get("/admin/getAllData", adminauth,  (req, res)=>{
   res.send("send all data");
 })
 app.use("/admin/deleteAllData", (req,res)=>{
