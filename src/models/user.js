@@ -4,7 +4,7 @@ const userschema = mongoose.Schema({
     firstname : {
         type : String
 },
-    secondname : {
+    lastname : {
         type: String
     },
     
