@@ -6,6 +6,7 @@ const User = require("./models/user")
 
 // code to add a data in database
 app.post("/signup", async (req, res)=>{
+    try {
     const userobj = {
         firstname: "eva",
         lastname: " soni",
@@ -16,7 +17,12 @@ app.post("/signup", async (req, res)=>{
     const newUser = new User(userobj);// creating a new user with above data
 
     await newUser.save();
-    res.send("user added succcessfully")
+    res.send("User added successfully");
+  } 
+  catch (err) {
+    console.error(err);
+    res.status(500).send(err.message);
+  }
 });
 
 
@@ -24,14 +30,18 @@ app.post("/signup", async (req, res)=>{
 connectDB()
  .then(()=>{
     console.log("database connection established");
+
     app.listen(7777, ()=> {
     console.log("server is successfully litening on port 7777")
   });
 
    
- })
+})
 .catch((err)=>{
     console.log("databse connection failed")
     console.error(err)
      
 })
+/*app.listen(7777, ()=> {
+    console.log("server is successfully litening on port 7777")
+  });*/
