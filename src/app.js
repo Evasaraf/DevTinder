@@ -25,6 +25,32 @@ app.post("/signup", async (req, res)=>{
   }
 });
 
+app.get("/user", async (req, res) => {
+  const userage = req.body.age;
+  try{
+    const user = await User.find({ age: userage });
+    if(user.length === 0){
+      res.status(404).send("No user found with the specified age");
+    }
+    else{
+      res.send(user);
+    }
+  }catch(err){
+    console.log("smthing went wrong while fetching the data");
+    console.error(err);
+  }
+});
+
+// Feed API - GET/ feed to fetch all the users from the database
+app.get("/feed", async  (req, res)=> {
+  try{
+    const user = await User.find({});
+    res.send(user);
+  }catch(err){
+    console.log("smthing went wrong while fetching the data");
+    console.error(err);
+  }
+});
 
 
 connectDB()
