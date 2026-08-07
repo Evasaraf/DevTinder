@@ -8,8 +8,8 @@ const User = require("./models/user")
 app.post("/signup", async (req, res)=>{
     try {
     const userobj = {
-        firstname: "eva",
-        lastname: " soni",
+        firstname: "trisha",
+        lastname: " aggarwal",
         password: "abcdef",
         age: "21"
     }
