@@ -4,18 +4,18 @@ const connectDB = require("./config/database")
 const app = express();
 const User = require("./models/user")
 
+app.use(express.json());// in postman request body is in json format so we need to use this middleware to
+// parse the json data to javascript object so that we can use it in our code
+
 // code to add a data in database
 app.post("/signup", async (req, res)=>{
-    try {
-    const userobj = {
-        firstname: "trisha",
-        lastname: " aggarwal",
-        password: "abcdef",
-        age: "21"
-    }
-// creating a new instance of my user model
-    const newUser = new User(userobj);// creating a new user with above data
 
+ 
+// creating a new instance of my user model
+// gettin the data from the request body and creating a new user with that data
+    const newUser = new User(req.body);// creating a new user with above data
+
+    try{
     await newUser.save();
     res.send("User added successfully");
   } 
