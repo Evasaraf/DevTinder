@@ -70,6 +70,27 @@ app.delete("/user", async (req, res)=>{
 });
 
 
+app.patch("/user", async (req,res)=>{
+
+  const userId = req.body.userId;
+  const data = req.body;
+
+  try{
+    const user = await User.findByIdAndUpdate({_id: userId} , data);
+   if(!user)
+{
+  console.log("user not found to update the data");
+
+}
+else{
+  res.send("user data updated successfully");
+}  }
+  catch(err){
+  console.log("smthing went wrong while updating the data");
+  }
+})
+
+
 connectDB()
  .then(()=>{
     console.log("database connection established");
