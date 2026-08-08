@@ -52,6 +52,23 @@ app.get("/feed", async  (req, res)=> {
   }
 });
 
+app.delete("/user", async (req, res)=>{
+   const userId = req.body.userId;
+
+  try{
+    const user = await User.findByIdAndDelete({_id:userId});
+    if(!user){
+      res.status(404).send("User not found");
+    }
+    else{
+      res.send("User deleted successfully");
+    }
+  }
+  catch(err){
+    console.log("smthing went wrong while deleting the data");
+  }
+});
+
 
 connectDB()
  .then(()=>{
@@ -68,6 +85,3 @@ connectDB()
     console.error(err)
      
 })
-/*app.listen(7777, ()=> {
-    console.log("server is successfully litening on port 7777")
-  });*/
