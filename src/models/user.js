@@ -29,7 +29,7 @@ const userschema = mongoose.Schema({
             }
         }
     },
-    
+
     profileUrl: {
         type: String
     },
@@ -39,7 +39,11 @@ const userschema = mongoose.Schema({
     skills: {
         type: [String]
     }
+},
+    {
+        timestamps : true
+    }
 
-})
+);
 // creating a user model
 module.exports = mongoose.model("user" , userschema)
