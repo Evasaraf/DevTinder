@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 // creating a user schema 
 const userschema = mongoose.Schema({
     firstname : {
@@ -48,8 +49,14 @@ const userschema = mongoose.Schema({
         type: String,
         required : true,
         unique : true,
-    }
-},
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Invalid email address");
+            }
+        }
+
+}    },
+
     {
         timestamps : true
     }

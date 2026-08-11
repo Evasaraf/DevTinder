@@ -70,9 +70,9 @@ app.delete("/user", async (req, res)=>{
 });
 
 
-app.patch("/user", async (req,res)=>{
+app.patch("/user/:userId", async (req,res)=>{
 
-  const userId = req.body.userId;
+  const userId = req.params.userId;
   const data = req.body;
 
   try{
@@ -82,7 +82,11 @@ app.patch("/user", async (req,res)=>{
   if(!isUpdateAllowed){
     return res.status(400).send("Invalid update request");// if the update request is not valid then return a 400 status code with an error message
   }
-   const user = await User.findByIdAndUpdate({_id: userId} , data, {runValidators: true});
+
+  if(data?.skills.length> 3){
+    throw new Error("skills should not be more than 3");
+  }
+   const user = await User.findByIdAndUpdate({_id: userId} , data, );
    if(!user)
 {
   console.log("user not found to update the data");
