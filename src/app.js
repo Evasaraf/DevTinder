@@ -76,14 +76,20 @@ app.patch("/user", async (req,res)=>{
   const data = req.body;
 
   try{
-    const user = await User.findByIdAndUpdate({_id: userId} , data);
+    // check if the update request is valid or not
+  const ALLowedUpdates = ["userId", "lastname", "age", "gender", "profileUrl", "about", "skills"];
+  const isUpdateAllowed = Object.keys(data).every((update)=> ALLowedUpdates.includes(update));// check if all the keys in the request body are present in the allowed updates array
+  if(!isUpdateAllowed){
+    return res.status(400).send("Invalid update request");// if the update request is not valid then return a 400 status code with an error message
+  }
+   const user = await User.findByIdAndUpdate({_id: userId} , data, {runValidators: true});
    if(!user)
 {
   console.log("user not found to update the data");
 
 }
 else{
-  res.send("user data updated successfully");
+  res.send("user data updated successfully"); 
 }  }
   catch(err){
   console.log("smthing went wrong while updating the data");

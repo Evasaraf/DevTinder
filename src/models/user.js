@@ -23,7 +23,7 @@ const userschema = mongoose.Schema({
 
     gender:{
         type: String,
-        validate(value){
+       validate(value){
             if(value!="male" && value!="female" && value!="other"){
                 throw new Error("gender should be male, female or other");
             }
@@ -37,7 +37,17 @@ const userschema = mongoose.Schema({
         type: String
     },
     skills: {
-        type: [String]
+        type: [String],
+       /* validate(value){
+            if(value.length>2){
+                throw new Error("skills should not be more than 2");
+            }   
+    },*/
+},
+    emailId: {
+        type: String,
+        required : true,
+        unique : true,
     }
 },
     {
