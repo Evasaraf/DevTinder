@@ -77,7 +77,7 @@ app.patch("/user/:userId", async (req,res)=>{
 
   try{
     // check if the update request is valid or not
-  const ALLowedUpdates = ["userId", "lastname", "age", "gender", "profileUrl", "about", "skills"];
+  const ALLowedUpdates = ["firstname", "lastname", "age", "gender", "profileUrl", "about", "skills"];
   const isUpdateAllowed = Object.keys(data).every((update)=> ALLowedUpdates.includes(update));// check if all the keys in the request body are present in the allowed updates array
   if(!isUpdateAllowed){
     return res.status(400).send("Invalid update request");// if the update request is not valid then return a 400 status code with an error message

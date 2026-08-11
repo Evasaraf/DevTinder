@@ -15,6 +15,12 @@ const userschema = mongoose.Schema({
         type : String,
         required : true,
         lowercase : true,
+        validate(value){
+            if(!validator.isStrongPassword(value)){
+                throw new Error("password is not strong enough");
+            }
+        }
+        
     },
 
     age:{
@@ -32,8 +38,13 @@ const userschema = mongoose.Schema({
     },
 
     profileUrl: {
-        type: String
-    },
+        type: String,
+        validate(value){
+            if(!validator.isURL(value)){
+                throw new Error("Invalid URL");
+            }
+    }
+},
     about:{
         type: String
     },
