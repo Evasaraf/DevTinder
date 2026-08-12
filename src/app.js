@@ -4,6 +4,7 @@ const connectDB = require("./config/database")
 const app = express();
 const User = require("./models/user")
 const {validateSignupData} = require("./utils/validate")
+const bcrypt = require("bcrypt");
 
 app.use(express.json());// in postman request body is in json format so we need to use this middleware to
 // parse the json data to javascript object so that we can use it in our code
@@ -15,7 +16,15 @@ app.post("/signup", async (req, res)=>{
     const newUser = new User(req.body);// creating a new user with above data
 
     try{
+      // validate the user
       validateSignupData(req);
+
+      // encrypt the password before saving it to the database
+      const {password} = req.body;
+   const passwordHash = await bcrypt.hash(password, 10);// hashing the password with 10 rounds of salt
+   newUser.password = passwordHash;// replacing the plain text password with the hashed password
+
+
     await newUser.save();
     res.send("User added successfully");
   } 
