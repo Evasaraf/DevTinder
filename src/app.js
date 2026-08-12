@@ -34,6 +34,31 @@ app.post("/signup", async (req, res)=>{
   }
 });
 
+//login api
+app.post("/login" , async(req,res)=>{
+
+  try{
+    const{emailId, password} = req.body;// if we want to login , then first get the email and password from the request body
+    const user = await User.findOne({emailId});// then verify the emailid , if emailid is present in the database then only go for 
+    // password verification , if emailid is not present in the database then return an error message
+    if(!user){
+    throw new Error("invalid credentials");// if user is not found then throw an error
+    
+    }
+    const isPaswordValid = await bcrypt.passwordCompare(password, user.password);
+    // if user is found then compare the password with the hashed password in the database
+    if(isPaswordValid){// if password is valid then send a success message
+      res.send("login successful");
+    }
+    else{// if password is not valid then throw an error
+      throw new Error("invalid login  credentials");
+    }
+  }
+  catch(err){// if any error occurs then send a error message
+    res.status(400).send("something went wrong while logging in");
+  }
+})
+
 app.get("/user", async (req, res) => {
   const userage = req.body.age;
   try{
