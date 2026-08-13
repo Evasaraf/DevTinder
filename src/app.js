@@ -45,9 +45,10 @@ app.post("/login" , async(req,res)=>{
     throw new Error("invalid credentials");// if user is not found then throw an error
     
     }
-    const isPaswordValid = await bcrypt.passwordCompare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
     // if user is found then compare the password with the hashed password in the database
-    if(isPaswordValid){// if password is valid then send a success message
+    if(isPasswordValid){// if password is valid then send a success message
+      res.cookie("token", "esrdtyvhbjniomklnjhgfctrdeszdxfcgvhuyi");//it will set a cookie in the browser with the name "token" and value "esrdtyvhbjniomklnjhgfctrdeszdxfcgvhuyi"
       res.send("login successful");
     }
     else{// if password is not valid then throw an error
@@ -55,10 +56,17 @@ app.post("/login" , async(req,res)=>{
     }
   }
   catch(err){// if any error occurs then send a error message
-    res.status(400).send("something went wrong while logging in");
+    res.status(400).send("something went wrong while logging in" + err.message);
   }
 })
 
+
+app.get("/profile", async (req, res)=>{
+
+  const cookies = req.cookies;// get the cookies from the request
+  res.send("reading cookie from the request");
+  console.log(cookies);
+})
 app.get("/user", async (req, res) => {
   const userage = req.body.age;
   try{
