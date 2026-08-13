@@ -5,10 +5,15 @@ const app = express();
 const User = require("./models/user")
 const {validateSignupData} = require("./utils/validate")
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
 
 app.use(express.json());// in postman request body is in json format so we need to use this middleware to
 // parse the json data to javascript object so that we can use it in our code
-
+app.use(cookieParser());// to parse the cookies from the request header and set it in the response header
+app.use((req, res, next) => {
+    console.log("REQUEST RECEIVED:", req.method, req.url);
+    next();
+});
 // code to add a data in database
 app.post("/signup", async (req, res)=>{
  // creating a new instance of my user model
@@ -61,12 +66,34 @@ app.post("/login" , async(req,res)=>{
 })
 
 
-app.get("/profile", async (req, res)=>{
+/*app.get("/profile", async (req, res)=>{
 
-  const cookies = req.cookies;// get the cookies from the request
+ // const cookies = req.cookies;// get the cookies from the request header and set it in the response header
+  console.log(req.cookies);
   res.send("reading cookie from the request");
-  console.log(cookies);
-})
+});*/
+
+app.get("/profile", async (req, res)=>{
+    const cookies = req.cookies;
+
+    console.log(cookies);
+
+    res.send("reading cookie from the request");
+});
+
+/*app.get("/profile", async (req, res) => {
+
+    console.log("PROFILE ROUTE HIT");
+
+    console.log("Headers:", req.headers);
+
+    console.log("Raw cookie:", req.headers.cookie);
+
+    console.log("Parsed cookies:", req.cookies);
+
+    res.send("reading cookie from the request");
+});*/
+
 app.get("/user", async (req, res) => {
   const userage = req.body.age;
   try{
