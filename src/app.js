@@ -7,6 +7,7 @@ const {validateSignupData} = require("./utils/validate")
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const {adminauth, userauth} = require("./middleware/auth")
 
 app.use(express.json());// in postman request body is in json format so we need to use this middleware to
 // parse the json data to javascript object so that we can use it in our code
@@ -69,45 +70,16 @@ app.post("/login" , async(req,res)=>{
 })
 
 
-/*app.get("/profile", async (req, res)=>{
 
- // const cookies = req.cookies;// get the cookies from the request header and set it in the response header
-  console.log(req.cookies);
-  res.send("reading cookie from the request");
-});*/
-
-app.get("/profile", async (req, res)=>{
-    const cookies = req.cookies;// get the cookies from the request header and set it in the response header
-    const {token} = cookies;// get the token from the cookies
-    if(!token){
-        return res.status(401).send("Unauthorized: No token provided");
-    }
-
-  
-    const decodedMessage = jwt.verify(cookies.token, "Dev@tinder9090");// verify the token and get the user id from the decoded message
-    const {_id} = decodedMessage;// get the user id from the decoded message and use it to find the user in the database
-    console.log("logged in user is:", _id);// get the user id from the decoded message and use it to find the user in the database
-    const user = await User.findById({_id});// find the user in the database with the user id and send the user data in the response
-   if(!user){
-    res.send("user not found");
-   }
-    res.send(user);
-
-    res.send("reading cookie from the request");
+app.get("/profile",  userauth, async (req, res)=>{
+    try{
+  const user = req.user;
+  res.send(user);
+}
+catch(err){
+  res.send("something went wrong while fetching the profile data" + err.message);
+}
 });
-
-/*app.get("/profile", async (req, res) => {
-
-    console.log("PROFILE ROUTE HIT");
-
-    console.log("Headers:", req.headers);
-
-    console.log("Raw cookie:", req.headers.cookie);
-
-    console.log("Parsed cookies:", req.cookies);
-
-    res.send("reading cookie from the request");
-});*/
 
 app.get("/user", async (req, res) => {
   const userage = req.body.age;
