@@ -6,6 +6,7 @@ const User = require("./models/user")
 const {validateSignupData} = require("./utils/validate")
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 app.use(express.json());// in postman request body is in json format so we need to use this middleware to
 // parse the json data to javascript object so that we can use it in our code
@@ -53,7 +54,9 @@ app.post("/login" , async(req,res)=>{
     const isPasswordValid = await bcrypt.compare(password, user.password);
     // if user is found then compare the password with the hashed password in the database
     if(isPasswordValid){// if password is valid then send a success message
-      res.cookie("token", "esrdtyvhbjniomklnjhgfctrdeszdxfcgvhuyi");//it will set a cookie in the browser with the name "token" and value "esrdtyvhbjniomklnjhgfctrdeszdxfcgvhuyi"
+
+      const token = jwt.sign({_id:user._id}, "Dev@tinder9090");
+      res.cookie("token", token);//it will set a cookie in the browser with the name "token" and value "token"
       res.send("login successful");
     }
     else{// if password is not valid then throw an error
@@ -74,9 +77,21 @@ app.post("/login" , async(req,res)=>{
 });*/
 
 app.get("/profile", async (req, res)=>{
-    const cookies = req.cookies;
+    const cookies = req.cookies;// get the cookies from the request header and set it in the response header
+    const {token} = cookies;// get the token from the cookies
+    if(!token){
+        return res.status(401).send("Unauthorized: No token provided");
+    }
 
-    console.log(cookies);
+  
+    const decodedMessage = jwt.verify(cookies.token, "Dev@tinder9090");// verify the token and get the user id from the decoded message
+    const {_id} = decodedMessage;// get the user id from the decoded message and use it to find the user in the database
+    console.log("logged in user is:", _id);// get the user id from the decoded message and use it to find the user in the database
+    const user = await User.findById({_id});// find the user in the database with the user id and send the user data in the response
+   if(!user){
+    res.send("user not found");
+   }
+    res.send(user);
 
     res.send("reading cookie from the request");
 });
