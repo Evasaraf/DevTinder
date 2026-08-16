@@ -72,5 +72,12 @@ const userschema = mongoose.Schema({
     }
 
 );
+
+userschema.methods.getJWT = async function(){// creating a method to generate a JWT token for the user
+    const user = this;
+    const token = jwt.sign({_id:user._id}, "Dev@tinder9090",{expiresIn: "7d"});
+    return token;}
+
+
 // creating a user model
 module.exports = mongoose.model("user" , userschema)

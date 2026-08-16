@@ -54,10 +54,11 @@ app.post("/login" , async(req,res)=>{
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     // if user is found then compare the password with the hashed password in the database
-    if(isPasswordValid){// if password is valid then send a success message
 
-      const token = jwt.sign({_id:user._id}, "Dev@tinder9090",{expiresIn: "7d"});// creating a token with user id and secret key and setting the expiry time to 1 hour
-      res.cookie("token", token);//it will set a cookie in the browser with the name "token" and value "token"
+    if(isPasswordValid){// if password is valid then send a success message
+      const user = await user.getJWT();// calling the getJWT method of user model to generate a token
+      const token = jwt.sign({_id:user._id}, "Dev@tinder9090",{expiresIn: "7d"});// creating a token with user id and secret key and setting the expiry time to 7 days
+      res.cookie("token", token,{expires: new Date(Date.now() + 7  * 60 * 60 * 1000)});//it will set a cookie in the browser with the name "token" and value "token"
       res.send("login successful");
     }
     else{// if password is not valid then throw an error
