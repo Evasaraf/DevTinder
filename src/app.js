@@ -52,7 +52,7 @@ app.post("/login" , async(req,res)=>{
     throw new Error("invalid credentials");// if user is not found then throw an error
     
     }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await user.validatepassword(password);// calling the validatepassword method of user model to compare the password with the hashed password in the database
     // if user is found then compare the password with the hashed password in the database
 
     if(isPasswordValid){// if password is valid then send a success message

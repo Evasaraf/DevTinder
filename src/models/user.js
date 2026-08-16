@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt = require("bcrypt");
 // creating a user schema 
 const userschema = mongoose.Schema({
     firstname : {
@@ -78,6 +79,11 @@ userschema.methods.getJWT = async function(){// creating a method to generate a 
     const token = jwt.sign({_id:user._id}, "Dev@tinder9090",{expiresIn: "7d"});
     return token;}
 
-
+userschema.methods.validatepassword = async function(passwordinputbyuser){// creating a method to validate the password of the user
+    const user = this;
+    const passwordhash = user.password;
+    const isPasswordValid = await bcrypt.compare(passwordinputbyuser, passwordhash);
+    return isPasswordValid;
+}
 // creating a user model
 module.exports = mongoose.model("user" , userschema)
