@@ -56,7 +56,7 @@ app.post("/login" , async(req,res)=>{
     // if user is found then compare the password with the hashed password in the database
     if(isPasswordValid){// if password is valid then send a success message
 
-      const token = jwt.sign({_id:user._id}, "Dev@tinder9090");
+      const token = jwt.sign({_id:user._id}, "Dev@tinder9090",{expiresIn: "7d"});// creating a token with user id and secret key and setting the expiry time to 1 hour
       res.cookie("token", token);//it will set a cookie in the browser with the name "token" and value "token"
       res.send("login successful");
     }
@@ -79,6 +79,13 @@ app.get("/profile",  userauth, async (req, res)=>{
 catch(err){
   res.send("something went wrong while fetching the profile data" + err.message);
 }
+});
+
+app.post("/sendconnectionrequest", userauth, async (req, res)=>{
+  console.log("sending connection request");
+  const user = req.user;
+  res.send(user.firstname +"  sent connection request");
+
 });
 
 app.get("/user", async (req, res) => {
