@@ -15,8 +15,8 @@ const profileRouter = require("./routes/profile");
 const connectionrequestRouter = require("./routes/connectionrequest");
 
 app.use("/", authRouter);
-app.use("/profile", profileRouter);
-app.use("/connectionrequest", connectionrequestRouter);
+app.use("/", profileRouter);
+app.use("/", connectionrequestRouter);
 
 app.get("/user", async (req, res) => {
   const userage = req.body.age;
