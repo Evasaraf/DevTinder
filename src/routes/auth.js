@@ -1,5 +1,9 @@
 const express = require("express");
-const authRouter = express.Router;
+const authRouter = express.Router();
+const {validateSignupData} = require("../utils/validate");
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 authRouter.post("/signup" , async(req, res)=>{
  // creating a new instance of my user model
@@ -54,4 +58,4 @@ authRouter.post("/login" , async(req,res)=>{
   }
 });
 
-module.exports = {authRouter};
+module.exports = authRouter;
