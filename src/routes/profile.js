@@ -26,7 +26,7 @@ profileRouter.patch("/profile/edit", userauth, async (req, res)=>{
         loggedInUser[key] = req.body[key];
     });
     console.log("user details are updated:" , loggedInUser);// give the updated details of loggedinuser
-    
+
     await loggedInUser.save();// make  the changes in mongodb also and save 
 
    res.send(`${loggedInUser.firstname}, your profile updated successfully`);
@@ -35,4 +35,13 @@ profileRouter.patch("/profile/edit", userauth, async (req, res)=>{
     res.status(400).send("something went wrong while editing the profile:  " + err.message);
  }
 });
+
+profileRouter.patch("/profile/password" , userauth , async (req, res) =>{
+  try{
+   const user = req.user;
+  }
+  catch(err){
+
+  }
+})
 module.exports = profileRouter;
