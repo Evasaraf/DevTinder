@@ -30,6 +30,14 @@ connectionrequestRouter.post("/request/send/:status/:toUserId", userauth, async(
     return res.status(404).send("user not found");
    }
 
+   // self connection check request: u can not send request to yourself
+  const yourselfConnectionRequest =
+  fromUserId.toString() === toUserId.toString();
+
+  if (yourselfConnectionRequest) {
+  return res.status(400).send("Cannot send connection request to yourself");
+} 
+
    // if a has sent a connection request to b once, it should not be allowed to send it again, and also b can not send request to a then
    const existingconnectionRequest = await connectionRequest.findOne({
     $or:[
@@ -41,6 +49,8 @@ connectionrequestRouter.post("/request/send/:status/:toUserId", userauth, async(
    {
     return res.status(400).send("connection request already exists");
    }
+
+
     const newconnectionRequest =  new connectionRequest({
       fromUserId, toUserId, status
     });
@@ -48,7 +58,7 @@ connectionrequestRouter.post("/request/send/:status/:toUserId", userauth, async(
     const data = await newconnectionRequest.save();
 
     res.json({
-      message: "connection request sent successfully",
+      message:  req.user.firstname + " " + status + " in " + toUser.firstname,
       data,
     })
 
