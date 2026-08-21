@@ -75,6 +75,8 @@ const userschema = mongoose.Schema({
 
 );
 
+userschema.index({firstname: 1, lastname:1})// creating compound indexes
+
 userschema.methods.getJWT = async function(){// creating a method to generate a JWT token for the user
     const user = this;
     const token = jwt.sign({_id:user._id}, "Dev@tinder9090",{expiresIn: "7d"});
