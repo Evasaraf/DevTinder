@@ -50,7 +50,7 @@ connectionrequestRouter.post("/request/send/:status/:toUserId", userauth, async(
     return res.status(400).send("connection request already exists");
    }
 
-
+// a user has sent the status(ignore / interested) connection request to user b 
     const newconnectionRequest =  new connectionRequest({
       fromUserId, toUserId, status
     });
