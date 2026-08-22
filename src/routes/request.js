@@ -68,4 +68,30 @@ connectionrequestRouter.post("/request/send/:status/:toUserId", userauth, async(
   }
 
 })
+
+connectionrequestRouter.post("/request/review/:status/:requestId", userauth, async(req,res)=>{
+  try{
+  const loggedInUser = req.user;
+  const{status, requestId} = req.params;
+  
+  const allowedstatus = ["accepted", "rejected"]// request from other users to loggiedin user can only be accepted or rejected
+  if(!allowedstatus.includes(status)){
+    return res.status(404).json({message: "invalid status "});
+  }
+// if request id is valid, and the user is logged in , and the status was interested then only loggedin user can accept or reject the request
+  const validconnectionRequest = await connectionRequest.findOne({
+    _id: requestId,
+    toUserId : loggedInUser._id,
+    status: "interested",// else if user a has ignored the request of user b , then how can user b accept/reject it
+  })
+  if(!validconnectionRequest){
+    return res.status(400).json({ message: "connection request not found"});
+  }
+  validconnectionRequest.status = status;
+  const data = await validconnectionRequest.save();
+  res.json({message: "connection request " +status, data})
+  }catch(err){
+    res.status(404).send("ERROR: " + err.message);
+  }
+})
 module.exports = connectionrequestRouter;
