@@ -24,11 +24,11 @@ userRouter.get("/user/connections/accepted", userauth, async(req, res)=>{
       const loggedInUser = req.user;
       const connectionRequests = await connectionRequest.find({
         $or:
-        [{toUserId: loggedInUser._id, status:"accepted" },
+        [{toUserId: loggedInUser._id, status:"accepted" },// ab kisi user ke connection stoh wahi honege na jo request vo accept karga
+            
          {fromUserId: loggedInUser._id, status:"accepted"},
         ]
-      }).populate("fromUserId", ["firstname", "lastname"])
-        .populate("toUserId", ["firstname", "lastname"])
+      }).
      
        res.json({data: connectionRequests});
     }catch(err){
