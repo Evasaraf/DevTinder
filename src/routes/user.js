@@ -2,6 +2,8 @@ const express = require("express");
 const userRouter = express.Router();
 const {userauth} = require("../middleware/auth");
 const connectionRequest = require("../models/connectionrequest");
+const { set } = require("mongoose");
+const User = require("../models/user");
 
 userRouter.get("/user/requests/received", userauth, async (req, res) => {
     try{
@@ -48,13 +50,30 @@ userRouter.get("/feed", userauth, async(req,res)=>{
     //4. his friends who are already connected
 
     const loggedInUser = req.user;
-    const connectionRequests = await connectionRequest.find({
+    const connectionRequests = await connectionRequest.find({// see the loggedin users connections request sent + received
     $or:[
         {fromUserId: loggedInUser._id},
         {toUserId: loggedInUser._id}
     ],
-    }).select("fromUserId toUserId").populate("fromUserId", "firstname").populate("toUserId","firstname");
-     res.send(connectionRequests);
+    }).select("fromUserId toUserId")
+   // .populate("fromUserId", "firstname").populate("toUserId","firstname");
+// then to hide the users mentioned above 1,2,3,4
+     const hideUsersFromFeed = new Set();
+     connectionRequests.forEach((req)=>{
+        hideUsersFromFeed.add(req.fromUserId.toString());
+        hideUsersFromFeed.add(req.toUserId.toString());
+     })
+     console.log("hidden users from feed");
+     console.log(hideUsersFromFeed);
+    
+
+     const users = await User.find({
+        $and:[
+            {_id: {$nin: Array.from(hideUsersFromFeed)}},
+            {_id: {$ne: loggedInUser._id}}
+        ],
+     })
+     res.send(users);
     }
     catch(err){
         res.status(404).send("error:", err.message);
