@@ -53,7 +53,7 @@ userRouter.get("/feed", userauth, async(req,res)=>{
         {fromUserId: loggedInUser._id},
         {toUserId: loggedInUser._id}
     ],
-    }).select("fromUserId toUserId");
+    }).select("fromUserId toUserId").populate("fromUserId", "firstname").populate("toUserId","firstname");
      res.send(connectionRequests);
     }
     catch(err){
