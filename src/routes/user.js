@@ -38,4 +38,26 @@ userRouter.get("/user/connections/accepted", userauth, async(req, res)=>{
     }
 })
 
+
+userRouter.get("/feed", userauth, async(req,res)=>{
+    try{
+    // users should see all the users card except
+    //1. his own card
+    //2. his connections
+    //3. ignored people
+    //4. his friends who are already connected
+
+    const loggedInUser = req.user;
+    const connectionRequests = await connectionRequest.find({
+    $or:[
+        {fromUserId: loggedInUser._id},
+        {toUserId: loggedInUser._id}
+    ],
+    }).select("fromUserId toUserId");
+     res.send(connectionRequests);
+    }
+    catch(err){
+        res.status(404).send("error:", err.message);
+    }
+})
 module.exports = userRouter;
