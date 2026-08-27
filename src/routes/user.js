@@ -48,7 +48,7 @@ userRouter.get("/feed", userauth, async(req,res)=>{
     //2. his connections
     //3. ignored people
     //4. his friends who are already connected
-   const  User_Safe_Data = ["firstname", "lastname", "age", "gender", "skills"]
+   const  User_Safe_Data = ["firstname", "lastname", "age", "gender", "skills"]// data of auser that others can see 
     const loggedInUser = req.user;
     const connectionRequests = await connectionRequest.find({// see the loggedin users connections request sent + received
     $or:[
@@ -69,8 +69,8 @@ userRouter.get("/feed", userauth, async(req,res)=>{
 
      const users = await User.find({
         $and:[
-            {_id: {$nin: Array.from(hideUsersFromFeed)}},
-            {_id: {$ne: loggedInUser._id}}
+            {_id: {$nin: Array.from(hideUsersFromFeed)}}, //nin - not in 
+            {_id: {$ne: loggedInUser._id}} // ne - not equals to 
         ],
      }).select(User_Safe_Data);
      res.send(users);
