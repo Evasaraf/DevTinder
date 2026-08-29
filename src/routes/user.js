@@ -50,6 +50,13 @@ userRouter.get("/feed", userauth, async(req,res)=>{
     //4. his friends who are already connected
    const  User_Safe_Data = ["firstname", "lastname", "age", "gender", "skills"]// data of auser that others can see 
     const loggedInUser = req.user;
+
+    const page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 10;
+    limit = limit > 50 ? 50 : limit;// if a user gives query greater than 50, supooose 1000, 10000 then this sets the query to 50 and 
+    // shows only 50 people at once
+    const skip = (page - 1)*limit;
+
     const connectionRequests = await connectionRequest.find({// see the loggedin users connections request sent + received
     $or:[
         {fromUserId: loggedInUser._id},
@@ -72,7 +79,7 @@ userRouter.get("/feed", userauth, async(req,res)=>{
             {_id: {$nin: Array.from(hideUsersFromFeed)}}, //nin - not in 
             {_id: {$ne: loggedInUser._id}} // ne - not equals to 
         ],
-     }).select(User_Safe_Data);
+     }).select(User_Safe_Data).skip(skip).limit(limit);
      res.send(users);
     }
     catch(err){
