@@ -47,7 +47,10 @@ authRouter.post("/login" , async(req,res)=>{
       const token = await user.getJWT();// calling the getJWT method of user model to generate a token
     //  const token = jwt.sign({_id:user._id}, "Dev@tinder9090",{expiresIn: "7d"});// creating a token with user id and secret key and setting the expiry time to 7 days
       res.cookie("token", token,{expires: new Date(Date.now() + 7  * 60 * 60 * 1000)});//it will set a cookie in the browser with the name "token" and value "token"
-      res.send("login successful");
+      res.send({
+    message: "login successful",
+    data: user
+});
     }
     else{// if password is not valid then throw an error
       throw new Error("invalid login  credentials");
