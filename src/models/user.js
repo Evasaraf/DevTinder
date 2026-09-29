@@ -65,9 +65,18 @@ const userschema = mongoose.Schema({
             if(!validator.isEmail(value)){
                 throw new Error("Invalid email address");
             }
-        }
+        },
+        photoUrl: {
+            type: String,
+            validate(value){
+                if(!validator.isURL(value)){
+                    throw new Error("Invalid URL");
+                }
+            }
+        },
+    },
 
-}    },
+} ,
 
     {
         timestamps : true
