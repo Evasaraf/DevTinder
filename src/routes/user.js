@@ -48,7 +48,7 @@ userRouter.get("/feed", userauth, async(req,res)=>{
     //2. his connections
     //3. ignored people
     //4. his friends who are already connected
-   const  User_Safe_Data = ["firstname", "lastname", "age", "gender", "skills"]// data of auser that others can see 
+   const  User_Safe_Data = ["firstname", "lastname", "age", "gender", "skills", "photoUrl"]// data of auser that others can see 
     const loggedInUser = req.user;
 
     const page = parseInt(req.query.page) || 1;

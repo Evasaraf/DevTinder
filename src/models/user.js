@@ -38,17 +38,10 @@ const userschema = mongoose.Schema({
         }
     },
 
-    profileUrl: {
-        type: String,
-        validate(value){
-            if(!validator.isURL(value)){
-                throw new Error("Invalid URL");
-            }
-    }
-},
     about:{
         type: String
     },
+
     skills: {
         type: [String],
        /* validate(value){
@@ -66,6 +59,7 @@ const userschema = mongoose.Schema({
                 throw new Error("Invalid email address");
             }
         },
+    },
         photoUrl: {
             type: String,
             validate(value){
@@ -76,7 +70,7 @@ const userschema = mongoose.Schema({
         },
     },
 
-} ,
+
 
     {
         timestamps : true
