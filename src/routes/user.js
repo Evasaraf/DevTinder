@@ -6,20 +6,29 @@ const { set } = require("mongoose");
 const User = require("../models/user");
 
 userRouter.get("/user/requests/received", userauth, async (req, res) => {
-    try{
-     const loggedInUser = req.user;
-     const connectionRequests= await connectionRequest.find({
-      toUserId: loggedInUser._id, 
+  try {
+    const loggedInUser = req.user;
+
+    const connectionRequests = await connectionRequest.find({
+      toUserId: loggedInUser._id,
       status: "interested",
-     }).populate("fromUserId", ["firstname", "lastname"])
-     res.json({message: "data fetched successfully",
-        data : connectionRequests,
-     })
-    }
-    catch(err){
-        return res.send("error:", err.message)
-    }
-})
+    }).populate(
+      "fromUserId",
+      "firstname lastname photoUrl skills about"
+    );
+
+    res.json({
+      data: connectionRequests,
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      message: err.message,
+    });
+  }
+});
+
 
 userRouter.get("/user/connections/accepted", userauth, async(req, res)=>{
     try{
