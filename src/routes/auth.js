@@ -5,29 +5,56 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-authRouter.post("/signup" , async(req, res)=>{
- // creating a new instance of my user model
-// gettin the data from the request body and creating a new user with that data
-    const newUser = new User(req.body);// creating a new user with above data
 
-    try{
-      // validate the user
-      validateSignupData(req);
+authRouter.post("/signup", async (req, res) => {
+  try {
+    // Step 1: Extract the data first
+    const { firstname, lastname, emailId, password } = req.body;
 
-      // encrypt the password before saving it to the database
-      const {password} = req.body;
-      const passwordHash = await bcrypt.hash(password, 10);// hashing the password with 10 rounds of salt
-      newUser.password = passwordHash;// replacing the plain text password with the hashed password
+    // Step 2: Validate the incoming request
+    validateSignupData(req);
 
+    // Step 3: Hash the password
+    const passwordHash = await bcrypt.hash(password, 10);
 
-    await newUser.save();
-    res.send("User added successfully");
-  } 
-  catch (err) {
-    console.error(err);
-    res.status(500).send(err.message);
+    // Step 4: Initialize newUser AFTER the variables above
+    const newUser = new User({
+      firstname,
+      lastname,
+      emailId: emailId,
+      password: passwordHash,
+    });
+
+    // Step 5: Save the user
+    const savedUser = await newUser.save();
+
+    // Step 6: Generate token
+    const token = await savedUser.getJWT();
+
+    // Step 7: Set the login cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    // Step 8: Send response
+    return res.status(201).json({
+      message: "User added successfully",
+      data: {
+        _id: savedUser._id,
+        firstname: savedUser.firstname,
+        lastname: savedUser.lastname,
+        emailId: savedUser.emailId,
+      },
+    });
+  } catch (err) {
+    console.error("Signup error:", err);
+    return res.status(400).json({
+      message: err.message,
+    });
   }
 });
+
 
 
 authRouter.post("/login" , async(req,res)=>{
