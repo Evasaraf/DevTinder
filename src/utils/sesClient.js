@@ -1,10 +1,9 @@
-const {SESClient} = require("@aws-sdk/client-ses");
-const REGION = "ap-southeast-2";
-const sesClient = new SESClient({ region: REGION,
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_SES_SECRET
-    }
- });
+require("dotenv").config();
 
- module.exports = {sesClient}
+const { SESClient } = require("@aws-sdk/client-ses");
+
+const sesClient = new SESClient({
+  region: process.env.AWS_REGION,
+});
+
+module.exports = sesClient;
