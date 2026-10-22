@@ -15,7 +15,7 @@ connectionrequestRouter.post("/sendconnectionrequest", userauth, async (req, res
 });
 
 
-const sendEmail = require('./utils/sendEmail')
+const sendEmail = require('../utils/sendEmail')
 connectionrequestRouter.post("/request/send/:status/:toUserId", userauth, async(req, res)=>{
   try{
     const fromUserId = req.user._id;
@@ -58,6 +58,8 @@ connectionrequestRouter.post("/request/send/:status/:toUserId", userauth, async(
     });
 
     const data = await newconnectionRequest.save();
+   const emailRes = await sendEmail.run();
+console.log("Email response:", emailRes);
 
     res.json({
       message:  req.user.firstname + " " + status + " in " + toUser.firstname,

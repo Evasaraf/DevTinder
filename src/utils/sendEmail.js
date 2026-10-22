@@ -58,7 +58,7 @@ const run = async () => {
 };
 
 // snippet-end:[ses.JavaScript.email.sendEmailV3]
-export { run };
+module.exports = { run };
 
 export default sendEmail;
 
