@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config();
-//const app = express();
+require("./utils/cronjobs");
 const connectDB = require("./config/database")
 const app = express();
 const bcrypt = require("bcrypt");
