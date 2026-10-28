@@ -4,7 +4,7 @@ const { subDays, startOfDay, endOfDay } = require("date-fns");
 const connectionRequestModel = require("../models/connectionrequest");
 const sendEmail = require('./sendEmail');
 
-cron.schedule("0 8 * * *", async () => {
+cron.schedule("18 16 * * *", async () => {
   console.log("Running daily pending request job:", new Date());
 
   try {
@@ -25,7 +25,7 @@ cron.schedule("0 8 * * *", async () => {
   for(const email of listOfEmails){
   // send emails 
   try{
-  const res = await sendEmail.run("new friend requests pending for " + toEmailId, "there are many friend requests pending, please login to the DevTinder.in and accept or reject the requests");
+  const res = await sendEmail.run("new friend requests pending for " + Email, "there are many friend requests pending, please login to the DevTinder.in and accept or reject the requests");
   }
   catch(err){
     console.error(err);
